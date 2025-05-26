@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ..backend.backend import Backend
+from ..backend.backend import Backend, audio_driver_types
 
 
 class Frontend:
@@ -37,7 +37,17 @@ class Frontend:
         )
         self.label.pack(pady=20)
 
-        driver_sources = self.backend.list_audio_sources()
+        self.driver_label = ctk.CTkLabel(
+            self.root,
+            text="Select Audio Driver:",
+        )
+        self.driver_label.pack(pady=10)
+        self.driver_dropdown = ctk.CTkOptionMenu(
+            self.root,
+            values=["mic", "file"],
+            command=self.set_audio_driver,
+        )
+        self.driver_dropdown.pack(pady=10)
 
         self.source_label = ctk.CTkLabel(
             self.root,
@@ -46,7 +56,7 @@ class Frontend:
         self.source_label.pack(pady=10)
         self.source_dropdown = ctk.CTkOptionMenu(
             self.root,
-            values=driver_sources,
+            values=self.backend.list_audio_sources(),
             command=self.backend.set_audio_source,
         )
         self.source_dropdown.pack(pady=10)
@@ -57,3 +67,11 @@ class Frontend:
             command=self.backend.extract_single,
         )
         self.extract_single_button.pack(pady=20)
+
+    def set_audio_driver(self, audio_driver_type: audio_driver_types):
+        """
+        Set the audio driver for the backend
+        :param audio_driver_type: Type of the audio driver
+        """
+        self.backend._set_audio_driver(audio_driver_type)
+        self.source_dropdown.configure(values=self.backend.list_audio_sources())

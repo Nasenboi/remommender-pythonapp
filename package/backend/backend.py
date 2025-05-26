@@ -2,8 +2,10 @@ import os
 from typing import Literal
 
 from .audio_driver import AudioDriver
+from .mic_audio_driver import MicAudioDriver
+from .file_audio_driver import FileAudioDriver
 
-audio_driver_types = Literal["mic"]
+audio_driver_types = Literal["mic", "file"]
 
 
 class Backend:
@@ -66,8 +68,8 @@ class Backend:
         :param audio_driver_type: Type of the audio driver
         """
         if audio_driver_type == "mic":
-            from .mic_audio_driver import MicAudioDriver
-
             self.audio_driver = MicAudioDriver()
+        elif audio_driver_type == "file":
+            self.audio_driver = FileAudioDriver(file_path=self.tmp_file_path)
         else:
             raise ValueError(f"Unsupported audio driver type: {audio_driver_type}")
