@@ -19,6 +19,8 @@ class Frontend:
         self.root.title("Recommender System")
         self.root.geometry("600x600")
         self.root.resizable(False, False)
+
+        self.current_tmp_file = None
         self.create_widgets()
 
     def mainloop(self):
@@ -64,9 +66,27 @@ class Frontend:
         self.extract_single_button = ctk.CTkButton(
             self.root,
             text="Extract Single Audio",
-            command=self.backend.extract_single,
+            command=self.extract_single,
         )
         self.extract_single_button.pack(pady=20)
+
+        self.current_tmp_file_label = ctk.CTkLabel(
+            self.root,
+            text="Current Temporary File: None",
+        )
+        self.current_tmp_file_label.pack(pady=10)
+
+        self.send_single_button = ctk.CTkButton(
+            self.root,
+            text="Send Single Request",
+            command=self.send_single_request,
+        )
+        self.send_single_button.pack(pady=20)
+        self.response_label = ctk.CTkLabel(
+            self.root,
+            text="Response: None",
+        )
+        self.response_label.pack(pady=10)
 
     def set_audio_driver(self, audio_driver_type: audio_driver_types):
         """
@@ -75,3 +95,23 @@ class Frontend:
         """
         self.backend._set_audio_driver(audio_driver_type)
         self.source_dropdown.configure(values=self.backend.list_audio_sources())
+
+    def extract_single(self):
+        """
+        Extract a single audio file and update the current temporary file
+        """
+        self.current_tmp_file = self.backend.extract_single()
+        print(f"Extracted audio file: {self.current_tmp_file}")
+        self.current_tmp_file_label.configure(
+            text=f"Current Temporary File: {self.current_tmp_file}"
+        )
+
+    def send_single_request(self):
+        """
+        Send a single audio file to the backend API server and update the response
+        """
+        if self.current_tmp_file:
+            response = self.backend.send_single_request(self.current_tmp_file)
+            self.response_label.configure(text=f"Response: {response}")
+        else:
+            self.response_label.configure(text="No audio file to send.")

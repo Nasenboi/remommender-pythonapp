@@ -1,5 +1,6 @@
 import os
 from typing import Literal
+import requests
 
 from .audio_driver import AudioDriver
 from .mic_audio_driver import MicAudioDriver
@@ -19,6 +20,7 @@ class Backend:
         frame_length_s: int = 5,
         hop_length_s: int = 3,
         audio_driver_type: audio_driver_types = "mic",
+        api_root: str = "http://localhost:8000/",
     ):
         """
         Initialize the Backend class
@@ -31,6 +33,7 @@ class Backend:
         self.frame_length_s = frame_length_s
         self.hop_length_s = hop_length_s
         self.audio_driver: AudioDriver = None
+        self.api_root = api_root
 
         self._set_audio_driver(audio_driver_type)
 
@@ -61,6 +64,24 @@ class Backend:
             frame_length_s=self.frame_length_s,
         )
         return self.tmp_file
+
+    def send_single_request(self, tmp_file_path: str) -> str:
+        """
+        Send a single audio file to the backend API server and return the response.
+        :param tmp_file_path: Path to the audio file to send
+        :return: Response from the backend as a string
+        """
+        api_path = f"{self.api_root}recommend/from-speech/"
+        api_url = f"{api_path}{os.path.basename(tmp_file_path)}"
+
+        with open(tmp_file_path, "rb") as f:
+            data = f.read()
+            headers = {"Content-Type": "audio/wav"}
+            response = requests.post(api_url, data=data, headers=headers)
+
+        print(response.status_code, response.text)
+
+        return response.text
 
     def _set_audio_driver(self, audio_driver_type: audio_driver_types):
         """
