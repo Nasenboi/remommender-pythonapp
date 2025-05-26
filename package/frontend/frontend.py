@@ -1,4 +1,4 @@
-import tkinter as tk
+import customtkinter as ctk
 
 
 class Frontend:
@@ -10,7 +10,8 @@ class Frontend:
         """
         Initialize the Frontend class
         """
-        self.root = tk.Tk()
+        ctk.set_default_color_theme("dark-blue")
+        self.root = ctk.CTk()
         self.root.title("Recommender System")
         self.root.geometry("800x600")
         self.root.resizable(False, False)
@@ -26,7 +27,5 @@ class Frontend:
         """
         Create the widgets for the frontend
         """
-        self.label = tk.Label(
-            self.root, text="Welcome to the Recommender System", font=("Arial", 24)
-        )
+        self.label = ctk.CTkLabel(self.root, text="Welcome to the Recommender System")
         self.label.pack(pady=20)
