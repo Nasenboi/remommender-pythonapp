@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from ..backend.backend import Backend
 
 
 class Frontend:
@@ -10,10 +11,13 @@ class Frontend:
         """
         Initialize the Frontend class
         """
+        self.backend = Backend()
+
+        ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("dark-blue")
         self.root = ctk.CTk()
         self.root.title("Recommender System")
-        self.root.geometry("800x600")
+        self.root.geometry("600x600")
         self.root.resizable(False, False)
         self.create_widgets()
 
@@ -27,5 +31,29 @@ class Frontend:
         """
         Create the widgets for the frontend
         """
-        self.label = ctk.CTkLabel(self.root, text="Welcome to the Recommender System")
+        self.label = ctk.CTkLabel(
+            self.root,
+            text="Welcome to the Recommender System",
+        )
         self.label.pack(pady=20)
+
+        driver_sources = self.backend.list_audio_sources()
+
+        self.source_label = ctk.CTkLabel(
+            self.root,
+            text="Select Audio Source:",
+        )
+        self.source_label.pack(pady=10)
+        self.source_dropdown = ctk.CTkOptionMenu(
+            self.root,
+            values=driver_sources,
+            command=self.backend.set_audio_source,
+        )
+        self.source_dropdown.pack(pady=10)
+
+        self.extract_single_button = ctk.CTkButton(
+            self.root,
+            text="Extract Single Audio",
+            command=self.backend.extract_single,
+        )
+        self.extract_single_button.pack(pady=20)
