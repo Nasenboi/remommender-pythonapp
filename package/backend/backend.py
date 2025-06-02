@@ -5,8 +5,9 @@ import requests
 from .audio_driver import AudioDriver
 from .mic_audio_driver import MicAudioDriver
 from .file_audio_driver import FileAudioDriver
+from .browser_driver import BrowserAudioDriver
 
-audio_driver_types = Literal["mic", "file"]
+audio_driver_types = Literal["mic", "file", "browser"]
 
 
 class Backend:
@@ -92,5 +93,7 @@ class Backend:
             self.audio_driver = MicAudioDriver()
         elif audio_driver_type == "file":
             self.audio_driver = FileAudioDriver(file_path=self.tmp_file_path)
+        elif audio_driver_type == "browser":
+            self.audio_driver = BrowserAudioDriver()
         else:
             raise ValueError(f"Unsupported audio driver type: {audio_driver_type}")

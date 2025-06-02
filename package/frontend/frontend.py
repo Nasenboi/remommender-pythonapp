@@ -46,7 +46,7 @@ class Frontend:
         self.driver_label.pack(pady=10)
         self.driver_dropdown = ctk.CTkOptionMenu(
             self.root,
-            values=["mic", "file"],
+            values=["mic", "file", "browser"],
             command=self.set_audio_driver,
         )
         self.driver_dropdown.pack(pady=10)
