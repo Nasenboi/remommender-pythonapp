@@ -50,7 +50,7 @@ class MicAudioDriver(AudioDriver):
         # Record audio
         audio = sd.rec(
             int(frame_length_s * samplerate),
-            samplerate=samplerate,
+            # samplerate=samplerate,
             channels=channels,
             dtype="int16",
             device=device_index,
