@@ -71,7 +71,7 @@ class Backend:
         :param tmp_file_path: Path to the audio file to send
         :return: Response from the backend as a string
         """
-        api_path = f"{self.api_root}recommend/from-speech/"
+        api_path = f"{self.api_root}emotion-retrival/from-speech/"
         api_url = f"{api_path}{os.path.basename(tmp_file_path)}"
 
         with open(tmp_file_path, "rb") as f:
